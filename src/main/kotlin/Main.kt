@@ -1,6 +1,7 @@
 import common.*
 import models.InventoryItem
 import models.MainMenu
+import kotlin.system.exitProcess
 
 private val viewModel = ViewModel { inventory ->
     displayItems(inventory)
@@ -8,6 +9,8 @@ private val viewModel = ViewModel { inventory ->
 
 fun main(args: Array<String>) {
     println(GREETINGS_MESSAGE)
+    println("Arguments: ${args.joinToString(separator = " | ")}")
+    viewModel.init(demoData)
     showMenu()
 }
 
@@ -15,16 +18,23 @@ private fun showMenu() {
     mainMenu.printAllElements()
 
     when (getIntegerInput(ENTER_MENU_INDEX)) {
-        MainMenu.SHOW_ITEMS.index -> {}
-        MainMenu.ADD_ITEMS.index -> {}
+        MainMenu.SHOW_ITEMS.index -> viewModel.getInventoryItems()
+        MainMenu.ADD_ITEMS.index -> addItem()
         MainMenu.SORT_ITEMS.index -> {}
         MainMenu.FIND_ITEMS.index -> {}
         MainMenu.SELL_ITEMS.index -> {}
-        MainMenu.EXIT.index -> {}
+        MainMenu.EXIT.index -> exit()
         else -> println(MENU_INDEX_ERROR)
     }
 
     showMenu()
+}
+
+private fun addItem() {
+    viewModel.addItem(getStringInput(ENTER_ITEM_DATA)) { error ->
+        println(error)
+        addItem()
+    }
 }
 
 private fun displayItems(items: List<InventoryItem>) {
@@ -35,4 +45,9 @@ private fun displayItems(items: List<InventoryItem>) {
     }
     print(ENTER_TO_CONTINUE)
     readLine()
+}
+
+private fun exit() {
+    println(LEAVE_MESSAGE)
+    exitProcess(0)
 }
