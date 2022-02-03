@@ -10,6 +10,8 @@ fun List<String>.printAllElements() {
     println()
 }
 
+fun String.convertToInt() = trim().toInt()
+
 fun getIntegerInput(message: String): Int {
     var input = -1
     while (input < 0) {

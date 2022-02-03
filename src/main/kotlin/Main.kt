@@ -20,9 +20,9 @@ private fun showMenu() {
     when (getIntegerInput(ENTER_MENU_INDEX)) {
         MainMenu.SHOW_ITEMS.index -> viewModel.getInventoryItems()
         MainMenu.ADD_ITEMS.index -> addItem()
-        MainMenu.SORT_ITEMS.index -> {}
-        MainMenu.FIND_ITEMS.index -> {}
-        MainMenu.SELL_ITEMS.index -> {}
+        MainMenu.SELL_ITEMS.index -> sellItems()
+        MainMenu.SORT_ITEMS.index -> sortItems()
+        MainMenu.FIND_ITEMS.index -> findItems()
         MainMenu.EXIT.index -> exit()
         else -> println(MENU_INDEX_ERROR)
     }
@@ -30,11 +30,36 @@ private fun showMenu() {
     showMenu()
 }
 
+private fun findItems() {
+    viewModel.findItems(getStringInput(ENTER_ITEM_QUERY)) { error ->
+        println(error)
+        findItems()
+    }
+}
+
+private fun sellItems() {
+    viewModel.sellItems(getStringInput(WHAT_TO_SELL)) { error ->
+        println(error)
+        sellItems()
+    }
+}
+
 private fun addItem() {
     viewModel.addItem(getStringInput(ENTER_ITEM_DATA)) { error ->
         println(error)
         addItem()
     }
+}
+
+private fun sortItems() {
+    sortMenu.printAllElements()
+    viewModel.sortItems(
+        input = getIntegerInput(ENTER_MENU_INDEX),
+        onError = { error ->
+            println(error)
+            sortItems()
+        }
+    )
 }
 
 private fun displayItems(items: List<InventoryItem>) {
@@ -49,5 +74,6 @@ private fun displayItems(items: List<InventoryItem>) {
 
 private fun exit() {
     println(LEAVE_MESSAGE)
+    displayItems(demoData)
     exitProcess(0)
 }
