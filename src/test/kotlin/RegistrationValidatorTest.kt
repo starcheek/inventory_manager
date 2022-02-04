@@ -13,11 +13,14 @@ class RegistrationValidatorTest {
 
     @Test
     fun `validateRegistrationInput() empty username returns false`() {
+        // Given empty username
         val actualResult = registrationValidator.validateRegistrationInput(
             "",
             "qwerty",
             "qwerty"
         )
+
+        // Then function returns false
         assertFalse(actualResult)
     }
 
